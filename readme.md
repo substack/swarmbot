@@ -9,8 +9,6 @@ This tool consists of 4 parts:
 * swarmbot command
 * swarmbot daemon
 
-[1]: https://npmjs.com/package/swarmlog
-
 # api example
 
 First, we will generate cryptographic keypairs for a publisher and a mirror
@@ -103,3 +101,90 @@ $ electron-spawn mirror.js log d9h38QqCVLjmCTdB5vNHF5s/QrLmMYbm0B8UoYazZbg=.ed25
 { msg: 'HELLOx2' }
 ^c
 ```
+
+# api
+
+``` js
+var swarmbot = require('swarmbot')
+```
+
+## var bot = swarmbot(opts)
+
+Create a swarmbot mirror from `opts`:
+
+* `opts.keys` - keypair data from `require('ssb-keys').generate()`
+* `opts.hubs` - array of [signalhub][2] URL strings
+* `opts.sodium` - sodium cryptographic API
+(`require('chloride')` or `require('chloride/browser')`)
+* `opts.wrtc` - provide a [webrtc][5] instance to use webrtc outside of the
+browser
+
+You can specify a single data store:
+
+* `opts.db` - [leveldb][3] instance (use [level-browserify][4] in the browser)
+
+or you can specify each data store separately:
+
+* `opts.logdb` - [leveldb][3] instance for the logdb
+* `opts.idb` - [leveldb][4] instance for indexing
+
+Separating the data stores can be useful for upgrades and plugins where the log
+serves as the source of truth and the indexes present materialized views on the
+log that can be rebuilt when the index requirements change.
+
+## bot.mirror(id, opts={}, cb)
+
+Mirror the swarmlog that has the public key `id`, remembering `id` when the
+swarmbot starts up in the future.
+
+## bot.unmirror(id, opts={}, cb)
+
+Stop mirroring the swarmlog at `id` and stop mirroring automatically in the
+future.
+
+## var stream = bot.mirroring(cb)
+
+Return a readable object `stream` with all the nodes that are currently being mirrored.
+
+Each mirror object `row` in the object stream has:
+
+* `row.id` - the public key of the remote swarmlog
+* `row.key` - the key of the document that first initialized the mirroring
+
+Optionally read the data as `cb(err, mirrors)`.
+
+## var log = bot.open(id, opts={})
+
+Open a [swarmlog][1] to `id`.
+
+## bot.close(id)
+
+Close the connection for `id`.
+
+## bot.destroy()
+
+Close all open connections.
+
+# install
+
+To get the library:
+
+```
+npm install swarmbot
+```
+
+To get the swarmbot command:
+
+```
+npm install -g swarmbot
+```
+
+# license
+
+BSD
+
+[1]: https://npmjs.com/package/swarmlog
+[2]: https://npmjs.com/package/signalhub
+[3]: https://npmjs.com/package/level
+[4]: https://npmjs.com/package/level-browserify
+[5]: https://npmjs.com/package/wrtc
