@@ -10,6 +10,7 @@ var homedir = require('homedir')
 var EventEmitter = require('events').EventEmitter
 var Iface = require('./iface.js')
 var rpcfile = require.resolve('./iface.js')
+var electronPath = require.resolve('electron-spawn/cli.js')
 
 module.exports = function (opts) {
   if (!opts) opts = {}
@@ -50,7 +51,7 @@ module.exports = function (opts) {
       autoclose: true,
       exit: true,
       args: [ '--dir', opts.dir ],
-      execPath: 'electron-spawn'
+      execPath: electronPath
     }
     if (opts.fg) {
       listen(Iface, xtend(aopts, { autoclose: false }))

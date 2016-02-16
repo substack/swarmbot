@@ -24,6 +24,7 @@
     "chloride": "^2.0.1",
     "defined": "^1.0.0",
     "duplexify": "^3.4.2",
+    "electron-spawn": "^4.1.0",
     "has": "^1.0.1",
     "homedir": "^0.6.0",
     "hyperlog-index": "^5.0.0",
