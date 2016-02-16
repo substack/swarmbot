@@ -107,7 +107,7 @@ $ electron-spawn publish.js
 
 Next we can create a swarmbot mirror:
 
-```
+``` js
 var swarmbot = require('swarmbot')
 var level = require('level')
 var chloride = require('chloride/browser')
