@@ -7,7 +7,7 @@ var chloride = require('chloride')
 var ssbkeys = require('ssb-keys')
 
 test('mirror', function (t) {
-  t.plan(3)
+  t.plan(5)
   var hub = signalhub()
   hub.listen(function () {
     var keys0 = ssbkeys.generate()
@@ -38,6 +38,10 @@ test('mirror', function (t) {
     bot1.open(keys0.public).createReadStream({ live: true })
       .on('data', function (row) {
         t.deepEqual(row.value, { msg: 'HELLO' })
+      })
+    bot1.open(keys1.public).createReadStream({ live: true })
+      .on('data', function (row) {
+        t.deepEqual(row.value.type, 'bot.mirror')
       })
     bot0.log.append({ msg: 'HELLO' })
     t.once('end', function () {

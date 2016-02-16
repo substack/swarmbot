@@ -31,14 +31,13 @@ function Swarmbot (opts) {
   self._swopts = {
     wrtc: opts.wrtc,
     hubs: opts.hubs,
-    keys: opts.keys,
     sodium: opts.sodium,
     valueEncoding: 'json'
   }
-  self.log = swarmlog(xtend(self._swopts, {
-    db: sub(self.logdb, LOG + self.id)
-  }))
   self.logs = {}
+  self.log = self.open(self.id, {
+    keys: opts.keys
+  })
   self._mdb = {
     data: sub(self.idb, MIRROR_DATA),
     index: sub(self.idb, MIRROR_INDEX),
@@ -78,7 +77,7 @@ Swarmbot.prototype.mirroring = function (cb) {
   d.setWritable(null)
   self.indexes.mirror.ready(function () {
     d.setReadable(pump(
-      self._mdb.index.createReadStream(),
+      self._mdb.data.createReadStream(),
       through.obj(write, end)
     ))
   })
@@ -133,19 +132,19 @@ Swarmbot.prototype.open = function (id, opts) {
     id = opts.id
   }
   if (!has(self.logs, id)) {
-    self.logs[id] = swarmlog(xtend(self._swopts, {
+    self.logs[id] = swarmlog(xtend(self._swopts, xtend(opts, {
+      id: id,
       db: sub(self.logdb, LOG + id)
-    }))
+    })))
   }
   return self.logs[id]
 }
 
 Swarmbot.prototype.close = function (id) {
   if (this.logs[id]) {
-    this.logs[id].peers.forEach(function (peer) {
-      peer.close()
+    this.logs[id].swarm.peers.forEach(function (peer) {
+      if (peer.close) peer.close()
     })
-    this.logs[id].close()
     delete this.logs[id]
   }
 }
