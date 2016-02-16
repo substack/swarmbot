@@ -9,6 +9,8 @@ This tool consists of 4 parts:
 * swarmbot command
 * swarmbot daemon
 
+Heavily inspired by [scuttlebot][6].
+
 # command-line usage
 
 On a system with high uptime, it's useful to set up a swarmbot to mirror other
@@ -241,3 +243,4 @@ BSD
 [3]: https://npmjs.com/package/level
 [4]: https://npmjs.com/package/level-browserify
 [5]: https://npmjs.com/package/wrtc
+[6]: https://www.npmjs.com/package/scuttlebot
