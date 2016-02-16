@@ -1,7 +1,6 @@
 var swarmlog = require('swarmlog')
 var sub = require('subleveldown')
 var hindex = require('hyperlog-index')
-var multiplex = require('multiplex')
 var duplexify = require('duplexify')
 var through = require('through2')
 var once = require('once')
@@ -102,6 +101,8 @@ Swarmbot.prototype.mirror = function (id, opts, cb) {
     cb = opts
     opts = {}
   }
+  if (!cb) cb = noop
+  if (!opts) opts = {}
   var doc = { type: 'bot.mirror', id: id }
   if (opts.links) self.log.add(opts.links, doc, opts, onadd)
   else self.log.append(doc, opts, onadd)
@@ -120,6 +121,8 @@ Swarmbot.prototype.unmirror = function (ids, cb) {
     cb = opts
     opts = {}
   }
+  if (!cb) cb = noop
+  if (!opts) opts = {}
   var doc = { type: 'bot.unmirror', id: id }
   if (opts.links) this.log.add(opts.links, doc, opts, onadd)
   else this.log.append(doc, opts, onadd)
@@ -155,3 +158,5 @@ Swarmbot.prototype.destroy = function () {
     self.close(id)
   })
 }
+
+function noop () {}
