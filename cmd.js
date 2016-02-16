@@ -36,6 +36,7 @@ if (cmd === 'server') {
     ids.forEach(function (id) {
       console.log(id.key)
     })
+    process.exit(0)
   })
 } else {
   usage(function () { process.exit(1) })
