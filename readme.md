@@ -9,7 +9,60 @@ This tool consists of 4 parts:
 * swarmbot command
 * swarmbot daemon
 
+# command-line usage
+
+On a system with high uptime, it's useful to set up a swarmbot to mirror other
+nodes on poor connections or in other geographic locations for redundancy.
+
+This is easiest to do with the swarmbot command.
+
+```
+swarmbot id
+  Print PUBKEY for the swarmbot mirror feed.
+
+swarmbot mirror PUBKEY
+  Mirror a PUBKEY.
+
+swarmbot unmirror PUBKEY
+  Stop mirroring a PUBKEY.
+
+swarmbot mirroring
+  Show mirroring PUBKEYs.
+
+swarmbot server
+  Listen in the foreground.
+
+```
+
+# rpc usage
+
+Applications that write to a swarmlog might want to register their keys with the
+swarmlog daemon on the local system. If the daemon isn't running, the rpc
+endpoint will automatically spawn it.
+
+``` js
+var rpc = require('swarmbot/rpc')
+```
+
+## rpc.id(cb)
+
+Get the public key of the swarmbot as `cb(err, id)`.
+
+## rpc.mirror(id, cb)
+
+Mirror the public key `id`.
+
+## rpc.unmirror(id, cb)
+
+Stop mirroring the public key `id`.
+
+## rpc.mirroring(cb)
+
+List the public keys being mirrored as `cb(err, ids)`.
+
 # api example
+
+Using the API directly
 
 First, we will generate cryptographic keypairs for a publisher and a mirror
 node:
