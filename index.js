@@ -8,8 +8,10 @@ var once = require('once')
 var defined = require('defined')
 var xtend = require('xtend')
 var has = require('has')
+var pump = require('pump')
 
 var MIRROR_DATA = 'md', MIRROR_INDEX = 'mi', LOG = 'l!'
+var LOGDB = 'l', IDB = 'i'
 
 module.exports = Swarmbot
 
@@ -22,6 +24,10 @@ function Swarmbot (opts) {
     keys.publicKey, keys.public, keys.pub, keys.identity, keys.id
   )
   self.logdb = opts.logdb
+  if (!self.logdb && opts.db) self.logdb = sub(opts.db, LOGDB)
+  self.idb = opts.idb
+  if (!self.idb && opts.db) self.idb = sub(opts.db, IDB)
+
   self._swopts = {
     wrtc: opts.wrtc,
     hubs: opts.hubs,
@@ -34,8 +40,8 @@ function Swarmbot (opts) {
   }))
   self.logs = {}
   self._mdb = {
-    data: sub(opts.idb, MIRROR_DATA),
-    index: sub(opts.idb, MIRROR_INDEX),
+    data: sub(self.idb, MIRROR_DATA),
+    index: sub(self.idb, MIRROR_INDEX),
   }
   self.indexes = {
     mirror: hindex({
@@ -59,11 +65,7 @@ Swarmbot.prototype._resume = function () {
   var self = this
   var r = self.mirroring()
   r.pipe(through.obj(function (m, enc, next) {
-    if (!has(self.logs, m.id)) {
-      self.logs[m.id] = swarmlog(xtend(self._swopts, {
-        db: sub(self.logdb, LOG + m.id)
-      }))
-    }
+    self.open(m.id)
     next()
   }))
 }
@@ -76,7 +78,7 @@ Swarmbot.prototype.mirroring = function (cb) {
   d.setWritable(null)
   self.indexes.mirror.ready(function () {
     d.setReadable(pump(
-      self._mdb.createReadStream(),
+      self._mdb.index.createReadStream(),
       through.obj(write, end)
     ))
   })
@@ -96,13 +98,22 @@ Swarmbot.prototype.mirroring = function (cb) {
 }
 
 Swarmbot.prototype.mirror = function (id, opts, cb) {
+  var self = this
   if (typeof opts === 'function') {
     cb = opts
     opts = {}
   }
   var doc = { type: 'bot.mirror', id: id }
-  if (opts.links) this.log.add(opts.links, doc, opts, onadd)
-  else this.log.append(doc, opts, onadd)
+  if (opts.links) self.log.add(opts.links, doc, opts, onadd)
+  else self.log.append(doc, opts, onadd)
+
+  function onadd (err, node) {
+    if (err) cb(err)
+    else {
+      self.open(id)
+      cb(null, node)
+    }
+  }
 }
 
 Swarmbot.prototype.unmirror = function (ids, cb) {
@@ -117,14 +128,16 @@ Swarmbot.prototype.unmirror = function (ids, cb) {
 
 Swarmbot.prototype.open = function (id, opts) {
   var self = this
-  if (id && typeof id === 'object' && !opts)
+  if (id && typeof id === 'object' && !opts) {
     opts = id
     id = opts.id
   }
-  if (has(self.logs, id)) return self.logs[id]
-  self.logs[id] = swarmlog(xtend(self._swopts, {
-    db: sub(self.logdb, LOG + id)
-  }))
+  if (!has(self.logs, id)) {
+    self.logs[id] = swarmlog(xtend(self._swopts, {
+      db: sub(self.logdb, LOG + id)
+    }))
+  }
+  return self.logs[id]
 }
 
 Swarmbot.prototype.close = function (id) {

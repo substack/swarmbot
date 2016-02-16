@@ -7,6 +7,7 @@ var chloride = require('chloride')
 var ssbkeys = require('ssb-keys')
 
 test('mirror', function (t) {
+  t.plan(3)
   var hub = signalhub()
   hub.listen(function () {
     var keys0 = ssbkeys.generate()
@@ -22,15 +23,26 @@ test('mirror', function (t) {
       db: memdb(),
       wrtc: wrtc,
       hubs: ['http://localhost:' + hub.address().port],
-      sodium: chloride
+      sodium: chloride,
       keys: keys1
     })
-    bot1.follow(keys0.public, function (err) {
+    bot1.mirror(keys0.public, function (err, node) {
       t.error(err)
-    })
-    bot1.createReadStream({ live: true })
-      .on('data', function (row) {
-        console.log('row=', row)
+      bot1.mirroring(function (err, results) {
+        t.error(err)
+        t.deepEqual(results, [
+          { id: keys0.public, key: node.key }
+        ])
       })
+    })
+    bot1.open(keys0.public).createReadStream({ live: true })
+      .on('data', function (row) {
+        t.deepEqual(row.value, { msg: 'HELLO' })
+      })
+    bot0.log.append({ msg: 'HELLO' })
+    t.once('end', function () {
+      bot0.destroy()
+      bot1.destroy()
+    })
   })
 })
