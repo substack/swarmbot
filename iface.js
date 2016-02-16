@@ -1,7 +1,7 @@
 var EventEmitter = require('events').EventEmitter
 var minimist = require('minimist')
 var fs = require('fs')
-var has = require('has')
+var path = require('path')
 var inherits = require('inherits')
 var level = require('level')
 var sodium = require('chloride')
@@ -18,7 +18,6 @@ inherits(Iface, EventEmitter)
 function Iface (server, stream, args) {
   if (!(this instanceof Iface)) return new Iface(server, stream, args)
   EventEmitter.call(this)
-  var iface = new EventEmitter
   var argv = minimist(args)
   this.keys = require(path.join(argv.dir, 'keys.json'))
   this.swarmbot = swarmbot({

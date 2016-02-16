@@ -8,6 +8,7 @@ var defined = require('defined')
 var xtend = require('xtend')
 var has = require('has')
 var pump = require('pump')
+var EventEmitter = require('events').EventEmitter
 
 var MIRROR_DATA = 'md', MIRROR_INDEX = 'mi', LOG = 'l!'
 var LOGDB = 'l', IDB = 'i'

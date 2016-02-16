@@ -48,6 +48,7 @@ module.exports = function (opts) {
       methods: methodNames,
       debug: true,
       autoclose: true,
+      exit: true,
       args: [ '--dir', opts.dir ],
       execPath: 'electron-spawn'
     }
