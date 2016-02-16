@@ -1,0 +1,15 @@
+swarmbot id
+  Print PUBKEY for the swarmbot mirror feed.
+
+swarmbot mirror PUBKEY
+  Mirror a PUBKEY.
+
+swarmbot unmirror PUBKEY
+  Stop mirroring a PUBKEY.
+
+swarmbot mirroring
+  Show mirroring PUBKEYs.
+
+swarmbot server
+  Listen in the foreground.
+

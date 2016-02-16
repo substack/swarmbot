@@ -20,11 +20,12 @@
   "author": "substack",
   "license": "BSD",
   "dependencies": {
-    "auto-daemon": "^2.1.3",
+    "auto-daemon": "^2.2.0",
     "chloride": "^2.0.1",
     "defined": "^1.0.0",
     "duplexify": "^3.4.2",
     "has": "^1.0.1",
+    "homedir": "^0.6.0",
     "hyperlog-index": "^5.0.0",
     "level": "^1.4.0",
     "minimist": "^1.2.0",

@@ -20,7 +20,7 @@ function Iface (server, stream, args) {
   EventEmitter.call(this)
   var iface = new EventEmitter
   var argv = minimist(args)
-  this.keys = require(argv.keys)
+  this.keys = require(path.join(argv.dir, 'keys.json'))
   this.swarmbot = swarmbot({
     logdb: level(path.join(argv.dir, 'log.db')),
     idb: level(path.join(argv.dir, 'index.db')),
