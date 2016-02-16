@@ -16,17 +16,20 @@ module.exports.prototype = Iface.prototype
 inherits(Iface, EventEmitter)
 
 function Iface (server, stream, args) {
-  if (!(this instanceof Iface)) return new Iface(server, stream, args)
-  EventEmitter.call(this)
+  var self = this
+  if (!(self instanceof Iface)) return new Iface(server, stream, args)
+  EventEmitter.call(self)
   var argv = minimist(args)
-  this.keys = require(path.join(argv.dir, 'keys.json'))
-  this.swarmbot = swarmbot({
+  self.keys = require(path.join(argv.dir, 'keys.json'))
+  self.swarmbot = swarmbot({
     logdb: level(path.join(argv.dir, 'log.db')),
     idb: level(path.join(argv.dir, 'index.db')),
     hubs: [ 'https://signalhub.mafintosh.com' ],
-    keys: this.keys,
+    keys: self.keys,
     sodium: sodium
   })
+  self.swarmbot.on('open', function () { self.emit('ref') })
+  self.swarmbot.on('close', function () { self.emit('unref') })
 }
 
 Iface.prototype.id = function (cb) {

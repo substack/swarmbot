@@ -9,15 +9,18 @@ var xtend = require('xtend')
 var has = require('has')
 var pump = require('pump')
 var EventEmitter = require('events').EventEmitter
+var inherits = require('inherits')
 
 var MIRROR_DATA = 'md', MIRROR_INDEX = 'mi', LOG = 'l!'
 var LOGDB = 'l', IDB = 'i'
 
 module.exports = Swarmbot
+inherits(Swarmbot, EventEmitter)
 
 function Swarmbot (opts) {
   var self = this
   if (!(self instanceof Swarmbot)) return new Swarmbot(opts)
+  EventEmitter.call(self)
   var keys = opts.keys || {}
   self.id = defined(
     opts.publicKey, opts.public, opts.pub, opts.identity, opts.id,
@@ -140,12 +143,14 @@ Swarmbot.prototype.open = function (id, opts) {
       id: id,
       db: sub(self.logdb, LOG + id)
     })))
+    self.emit('open', id)
   }
   return self.logs[id]
 }
 
 Swarmbot.prototype.close = function (id) {
-  if (this.logs[id]) {
+  if (has(this.logs, id)) {
+    this.emit('close', id)
     this.logs[id].swarm.peers.forEach(function (peer) {
       if (peer.close) peer.close()
     })
