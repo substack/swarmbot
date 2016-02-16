@@ -2,6 +2,9 @@
 
 mirroring for a p2p mesh of [swarmlogs][1]
 
+swarmbots are useful for improving the availability of a swarmlog by running
+dedicated mirroring peers for a list of public keys.
+
 This tool consists of 4 parts:
 
 * swarmbot api
