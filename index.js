@@ -22,6 +22,7 @@ function Swarmbot (opts) {
   if (!(self instanceof Swarmbot)) return new Swarmbot(opts)
   EventEmitter.call(self)
   var keys = opts.keys || {}
+  self.policy = opts.policy || {}
   self.id = defined(
     opts.publicKey, opts.public, opts.pub, opts.identity, opts.id,
     keys.publicKey, keys.public, keys.pub, keys.identity, keys.id
@@ -88,10 +89,16 @@ Swarmbot.prototype.mirroring = function (cb) {
   return d
 
   function write (row, enc, next) {
+    var stream = this
     var doc = { id: row.key, key: row.value }
-    if (results) results.push(doc)
-    this.push(doc)
-    next()
+    self.log.get(row.value, function (err, rec) {
+      if (rec && rec.value && rec.value.remirror !== undefined) {
+        doc.remirror = rec.value.remirror
+      }
+      if (results) results.push(doc)
+      stream.push(doc)
+      next()
+    })
   }
   function end (next) {
     if (cb) cb(null, results)
@@ -108,6 +115,7 @@ Swarmbot.prototype.mirror = function (id, opts, cb) {
   if (!cb) cb = noop
   if (!opts) opts = {}
   var doc = { type: 'bot.mirror', id: id }
+  if (opts.remirror) doc.remirror = opts.remirror
   if (opts.links) self.log.add(opts.links, doc, opts, onadd)
   else self.log.append(doc, opts, onadd)
 
