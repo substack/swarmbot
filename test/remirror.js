@@ -20,7 +20,8 @@ test('remirror', function (t) {
       keys: keys0,
       policy: {
         remirror: true
-      }
+      },
+      debug: true
     })
     var keys1 = ssbkeys.generate()
     var bot1 = swarmbot({
@@ -47,8 +48,9 @@ test('remirror', function (t) {
       bot1.once('open', function (id) {
         t.equal(id, keys2.public, '1 mirroring 2')
         bot1.mirroring(function (err, results) {
-          t.deepEqual(results.map(rmap), [ keys2.public ]),
-          '1 mirroring list'
+          t.deepEqual(
+            results.map(rmap), [ keys2.public ],
+            '1 mirroring list')
         })
       })
       bot0.once('open', function (id) {
