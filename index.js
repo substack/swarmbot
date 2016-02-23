@@ -23,7 +23,6 @@ function Swarmbot (opts) {
   EventEmitter.call(self)
   var keys = opts.keys || {}
   self.policy = opts.policy || {}
-  self.debug = opts.debug
 
   self.id = defined(
     opts.publicKey, opts.public, opts.pub, opts.identity, opts.id,
@@ -70,14 +69,12 @@ Swarmbot.prototype._mirrorIndexReady = function (cb) {
 
 Swarmbot.prototype._createMirrorIndex = function (id, log) {
   var self = this
-  if (self.debug) console.error('INDEX', id)
   if (has(self.indexes, id)) return self.indexes[id]
   var ix = hindex({ log: log, db: self._mdb.index, map: map })
   self.indexes[id] = ix
   return ix
 
   function map (row, next) {
-    if (self.debug) console.error('MAP', id, row.value)
     if (row.value && row.value.type === 'bot.mirror'
     && row.value.id) {
       var rec = { id: id, key: row.key }
@@ -192,7 +189,6 @@ Swarmbot.prototype.open = function (id, opts) {
       slog.get(rec.key, function (err, doc) {
         if (!doc || !doc.value) return
         if (doc.value.remirror) {
-          if (self.debug) console.error('REMIRROR', id)
           self._createMirrorIndex(id, self.logs[id])
         }
       })
