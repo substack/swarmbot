@@ -13,6 +13,21 @@ swarmbot mirroring
 swarmbot server
   Listen in the foreground.
 
+swarmbot pid
+  Print the background daemon process id.
+
+swarmbot stop
+  Kill the daemon process.
+
+swarmbot hubs
+  Print the list of signalhubs.
+
+swarmbot hubs add HUB
+  Add a signalhub to the configuration.
+
+swarmbot hubs remove HUB
+  Remove a signalhub from the configuration.
+
 Options for all commands:
 
   --hub=HUB        Use a signalhub at HUB.

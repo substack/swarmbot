@@ -16,6 +16,15 @@ module.exports = function (opts) {
   if (typeof opts === 'string') opts = { dir: opts }
   if (!opts.dir) opts.dir = path.join(homedir(), '.config/swarmbot')
 
+  var args = [].concat(opts.args).filter(Boolean)
+  if (opts.dir) args.push('--dir', opts.dir)
+  ;[].concat(opts.hub, opts.hubs).forEach(function (hub) {
+    if (hub) args.push('--hub', hub)
+  })
+  ;[].concat(opts.plugin, opts.plugins).forEach(function (plugin) {
+    if (plugin) args.push('--plugin', plugin)
+  })
+
   var pending = 3
   fs.stat(path.join(opts.dir, 'keys.json'), function (err, stat) {
     if (stat) return done()
@@ -23,11 +32,12 @@ module.exports = function (opts) {
       JSON.stringify(ssbkeys.generate()), done)
   })
   var configfile = path.join(opts.dir, 'config.json')
+  args.push('--configfile', configfile)
   fs.stat(configfile, function (err, stat) {
     if (!stat) return done()
     fs.readFile(configfile, 'utf8', function (err, src) {
       if (err) return done()
-      try { var config = JSON.parse() }
+      try { var config = JSON.parse(src) }
       catch (err) { return done() }
       if (config && config.hubs) {
         config.hubs.forEach(function (hub) {
@@ -42,15 +52,6 @@ module.exports = function (opts) {
     })
   })
   mkdirp(opts.dir, done)
-
-  var args = [].concat(opts.args).filter(Boolean)
-  if (opts.dir) args.push('--dir', opts.dir)
-  ;[].concat(opts.hub, opts.hubs).forEach(function (hub) {
-    if (hub) args.push('--hub', hub)
-  })
-  ;[].concat(opts.plugin, opts.plugins).forEach(function (plugin) {
-    if (plugin) args.push('--plugin', plugin)
-  })
 
   var methods = new EventEmitter
   var queue = []

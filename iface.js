@@ -6,6 +6,7 @@ var inherits = require('inherits')
 var level = require('level')
 var sodium = require('chloride')
 var swarmbot = require('./')
+var RPC = require('./rpc.js')
 
 var iface = null
 module.exports = function (server, stream, args) {
@@ -28,6 +29,7 @@ function Iface (server, stream, args) {
     keys: self.keys,
     sodium: sodium
   })
+  self.configfile = argv.configfile
   self.swarmbot.on('open', function () { self.emit('ref') })
   self.swarmbot.on('close', function () { self.emit('unref') })
 
@@ -40,6 +42,24 @@ function Iface (server, stream, args) {
         + ' from ' + name + ' plugin, received: ' + typeof fn))
     } else fn(self.swarmbot, argv)
   })
+}
+
+Iface.prototype.configFile = function (cb) {
+  cb(null, this.configfile)
+}
+
+Iface.prototype.readConfig = function (cb) {
+  fs.readFile(this.configfile, 'utf8', function (err, src) {
+    if (err) return cb(err)
+    try { var config = JSON.parse(src) }
+    catch (err) { return cb(err) }
+    cb(null, config)
+  })
+}
+
+Iface.prototype.writeConfig = function (config, cb) {
+  var src = JSON.stringify(config, null, 2)
+  fs.writeFile(this.configfile, src, cb)
 }
 
 Iface.prototype.pid = function (cb) {

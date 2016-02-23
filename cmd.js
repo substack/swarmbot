@@ -44,10 +44,54 @@ if (cmd === 'server') {
     console.log(pid)
     process.exit(0)
   })
-} else if (cmd === 'kill') {
+} else if (cmd === 'kill' || cmd === 'stop') {
   RPC(argv).pid(function (err, pid) {
     if (err) return error(err)
     process.kill(pid)
+    process.exit(0)
+  })
+} else if (cmd === 'hubs' && argv._[1] === 'add' && argv._[2]) {
+  var rpc = RPC(argv)
+  rpc.readConfig(function (err, config) {
+    if (!config) config = {}
+    if (!config.hubs) config.hubs = []
+    config.hubs.push(argv._[2])
+    rpc.writeConfig(config, function (err) {
+      if (err) error(err)
+      else process.exit(0)
+    })
+  })
+} else if (cmd === 'hubs' && /^(rm|del|remove)$/.test(argv._[1]) && argv._[2]) {
+  var rpc = RPC(argv)
+  rpc.readConfig(function (err, config) {
+    if (!config) config = {}
+    if (!config.hubs) config.hubs = []
+    config.hubs = config.hubs.filter(function (hub) {
+      return hub !== argv._[2]
+    })
+    rpc.writeConfig(config, function (err) {
+      if (err) error(err)
+      else process.exit(0)
+    })
+  })
+} else if (cmd === 'hubs' && argv._.length === 1) {
+  RPC(argv).readConfig(function (err, config) {
+    var hubs = (config || {}).hubs || []
+    hubs.forEach(function (hub) {
+      console.log(hub)
+    })
+    process.exit(0)
+  })
+} else if (cmd === 'config' && argv._[1] === 'file') {
+  RPC(argv).configFile(function (err, file) {
+    if (err) return error(err)
+    console.log(file)
+    process.exit(0)
+  })
+} else if (cmd === 'config' && /^(ls|list|)$/.test(argv._[1] || '')) {
+  RPC(argv).readConfig(function (err, config) {
+    if (err) return error(err)
+    console.log(JSON.stringify(config, null, 2))
     process.exit(0)
   })
 } else {
