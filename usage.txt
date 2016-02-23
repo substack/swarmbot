@@ -28,8 +28,15 @@ swarmbot hubs add HUB
 swarmbot hubs remove HUB
   Remove a signalhub from the configuration.
 
-Options for all commands:
+swarmbot plugins
+  Print the list of installed plugins.
 
-  --hub=HUB        Use a signalhub at HUB.
-  --plugin=PLUGIN  Use a PLUGIN.
+swarmbot plugins add PLUGIN
+  Add an already-installed plugin to the config.
+
+swarmbot plugins remove PLUGIN
+  Remove an installed plugin from the config.
+
+swarmbot plugins install PLUGIN
+  Install a plugin from npm then add it to the config.
 
