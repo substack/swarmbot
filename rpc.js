@@ -81,7 +81,10 @@ module.exports = function (opts) {
       execPath: electronPath
     }
     if (opts.fg) {
-      listen(Iface, xtend(aopts, { autoclose: false }))
+      var server = listen(Iface, xtend(aopts, { autoclose: false }))
+      server.once('ready', function () {
+        autod(aopts, function (err, r, c) { c.end() })
+      })
     } else {
       autod(aopts, function (err, r, c) {
         if (err) methods.emit('error', err)
