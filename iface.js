@@ -30,6 +30,16 @@ function Iface (server, stream, args) {
   })
   self.swarmbot.on('open', function () { self.emit('ref') })
   self.swarmbot.on('close', function () { self.emit('unref') })
+
+  var plugins = [].concat(argv.plugin, argv.plugins)
+  plugins.forEach(function (name) {
+    try { var fn = require(name) }
+    catch (err) { return self.emit('error', err) }
+    if (typeof fn !== 'function') {
+      self.emit('error', new Error('expected function export'
+        + ' from ' + name + ' plugin, received: ' + typeof fn))
+    } else fn(self)
+  })
 }
 
 Iface.prototype.id = function (cb) {
