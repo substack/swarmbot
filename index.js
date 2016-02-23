@@ -12,7 +12,7 @@ var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 
 var MIRROR_DATA = 'md', MIRROR_INDEX = 'mi', LOG = 'l!'
-var LOGDB = 'l', IDB = 'i'
+var LOGDB = 'l', IDB = 'i', PLUGINDB = 'p'
 
 module.exports = Swarmbot
 inherits(Swarmbot, EventEmitter)
@@ -32,6 +32,8 @@ function Swarmbot (opts) {
   if (!self.logdb && opts.db) self.logdb = sub(opts.db, LOGDB)
   self.idb = opts.idb
   if (!self.idb && opts.db) self.idb = sub(opts.db, IDB)
+  self._plugindb = opts.plugindb
+  if (!self._plugindb && opts.db) self._plugindb = sub(opts.db, PLUGINDB)
 
   self._swopts = {
     wrtc: opts.wrtc,
@@ -220,6 +222,10 @@ Swarmbot.prototype.destroy = function () {
   Object.keys(self.logs).forEach(function (id) {
     self.close(id)
   })
+}
+
+Swarmbot.prototype.db = function (name) {
+  return sub(this._plugindb, name)
 }
 
 function noop () {}

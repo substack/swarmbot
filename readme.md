@@ -239,6 +239,10 @@ When a swarmlog is opened, this event fires with the `id` and `log`.
 
 When a swarmlog is closed, this event fires with the `id` and `log`.
 
+## var db = bot.db(name)
+
+Request a prefixed database handle `db` for a plugin called `name`.
+
 # plugin api
 
 Plugins are modules that receive a swarmbot instance as their first argument.
