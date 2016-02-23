@@ -24,14 +24,14 @@ function Iface (server, stream, args) {
   self.swarmbot = swarmbot({
     logdb: level(path.join(argv.dir, 'log.db')),
     idb: level(path.join(argv.dir, 'index.db')),
-    hubs: [].concat(argv.hub, argv.hubs),
+    hubs: [].concat(argv.hub, argv.hubs).filter(Boolean),
     keys: self.keys,
     sodium: sodium
   })
   self.swarmbot.on('open', function () { self.emit('ref') })
   self.swarmbot.on('close', function () { self.emit('unref') })
 
-  var plugins = [].concat(argv.plugin, argv.plugins)
+  var plugins = [].concat(argv.plugin, argv.plugins).filter(Boolean)
   plugins.forEach(function (name) {
     try { var fn = require(name) }
     catch (err) { return self.emit('error', err) }

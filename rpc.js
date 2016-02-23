@@ -26,11 +26,11 @@ module.exports = function (opts) {
   mkdirp(opts.dir, done)
 
   var args = [ '--dir', opts.dir ]
-  ;(opts.hubs || []).forEach(function (hub) {
-    args.push('--hub', hub)
+  [].concat(opts.hub, opts.hubs).forEach(function (hub) {
+    if (hub) args.push('--hub', hub)
   })
-  ;(opts.plugins || []).forEach(function (plugin) {
-    args.push('--plugin', plugin)
+  [].concat(opts.plugin, opts.plugins).forEach(function (plugin) {
+    if (plugin) args.push('--plugin', plugin)
   })
 
   var methods = new EventEmitter
