@@ -44,6 +44,12 @@ if (cmd === 'server') {
     console.log(pid)
     process.exit(0)
   })
+} else if (cmd === 'kill') {
+  RPC(argv).pid(function (err, pid) {
+    if (err) return error(err)
+    process.kill(pid)
+    process.exit(0)
+  })
 } else {
   usage(function () { process.exit(1) })
 }
