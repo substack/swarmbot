@@ -114,6 +114,26 @@ Stop mirroring the public key `id`.
 
 List the public keys being mirrored as `cb(err, ids)`.
 
+## rpc.configFile(cb)
+
+Get the configuration file as `cb(err, configfile)`.
+
+## rpc.readConfig(cb)
+
+Read the configuration file contents as `cb(err, config)`.
+
+## rpc.writeConfig(config, cb)
+
+Write the configuration in a `config` object to the config file.
+
+## rpc.pid(cb)
+
+Get the process id as `cb(err, pid)`.
+
+## rpc.emitEvent(name, args...)
+
+Emit an event `name` with `args...` on the swarmbot instance.
+
 # api example
 
 Using the API directly
