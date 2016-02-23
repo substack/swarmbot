@@ -245,12 +245,13 @@ Request a prefixed database handle `db` for a plugin called `name`.
 
 # plugin api
 
-Plugins are modules that receive a swarmbot instance as their first argument.
+Plugins are modules that receive a swarmbot instance as their first argument and
+command-line options as their second argument.
 
 For example, this plugin will print messages when a log is opened or closed:
 
 ``` js
-module.exports = function (bot) {
+module.exports = function (bot, opts) {
   bot.on('open', function (id, log) { console.log('OPEN', id) })
   bot.on('close', function (id, log) { console.log('CLOSE', id) })
 }

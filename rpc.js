@@ -24,7 +24,8 @@ module.exports = function (opts) {
   })
   mkdirp(opts.dir, done)
 
-  var args = [ '--dir', opts.dir ]
+  var args = [].concat(opts.args).filter(Boolean)
+  if (opts.dir) args.push('--dir', opts.dir)
   [].concat(opts.hub, opts.hubs).forEach(function (hub) {
     if (hub) args.push('--hub', hub)
   })

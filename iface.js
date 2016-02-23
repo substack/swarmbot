@@ -33,7 +33,7 @@ function Iface (server, stream, args) {
 
   var plugins = [].concat(argv.plugin, argv.plugins).filter(Boolean)
   plugins.forEach(function (name) {
-    try { var fn = require(name) }
+    try { var fn = require(name, argv) }
     catch (err) { return self.emit('error', err) }
     if (typeof fn !== 'function') {
       self.emit('error', new Error('expected function export'
