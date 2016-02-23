@@ -1,6 +1,6 @@
 {
   "name": "swarmbot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "mirroring for a p2p mesh of swarmlogs",
   "main": "index.js",
   "bin": {
