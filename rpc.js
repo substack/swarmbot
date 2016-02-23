@@ -25,6 +25,11 @@ module.exports = function (opts) {
   })
   mkdirp(opts.dir, done)
 
+  var args = [ '--dir', opts.dir ]
+  ;(opts.hubs).forEach(function (hub) {
+    args.push('--hub', hub)
+  })
+
   var methods = new EventEmitter
   var queue = []
   var methodNames = Object.keys(Iface.prototype)
@@ -50,7 +55,7 @@ module.exports = function (opts) {
       debug: true,
       autoclose: true,
       exit: true,
-      args: [ '--dir', opts.dir ],
+      args: args,
       execPath: electronPath
     }
     if (opts.fg) {

@@ -24,7 +24,7 @@ function Iface (server, stream, args) {
   self.swarmbot = swarmbot({
     logdb: level(path.join(argv.dir, 'log.db')),
     idb: level(path.join(argv.dir, 'index.db')),
-    hubs: [ 'https://signalhub.mafintosh.com' ],
+    hubs: [].concat(argv.hub, argv.hubs),
     keys: self.keys,
     sodium: sodium
   })
