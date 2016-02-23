@@ -239,6 +239,19 @@ When a swarmlog is opened, this event fires with the `id` and `log`.
 
 When a swarmlog is closed, this event fires with the `id` and `log`.
 
+# plugin api
+
+Plugins are modules that receive a swarmbot instance as their first argument.
+
+For example, this plugin will print messages when a log is opened or closed:
+
+``` js
+module.exports = function (bot) {
+  bot.on('open', function (id, log) { console.log('OPEN', id) })
+  bot.on('close', function (id, log) { console.log('CLOSE', id) })
+}
+```
+
 # install
 
 To get the library:
