@@ -21,6 +21,20 @@ nodes on poor connections or in other geographic locations for redundancy.
 
 This is easiest to do with the swarmbot command.
 
+First, you should configure one or more signalhubs to use:
+
+```
+$ swarmbot hubs add https://signalhub.mafintosh.com
+```
+
+Now you can start mirroring swarmlog pubkeys:
+
+```
+$ swarmbot mirror U8fatVWlxT4bfCmgIw917pEoHakQs9P/l3VDNfuIm68=.ed25519
+```
+
+## usage
+
 ```
 swarmbot id
   Print PUBKEY for the swarmbot mirror feed.
@@ -37,10 +51,32 @@ swarmbot mirroring
 swarmbot server
   Listen in the foreground.
 
-Options for all commands:
+swarmbot pid
+  Print the background daemon process id.
 
-  --hub=HUB        Use a signalhub at HUB.
-  --plugin=PLUGIN  Use a PLUGIN.
+swarmbot stop
+  Kill the daemon process.
+
+swarmbot hubs
+  Print the list of signalhubs.
+
+swarmbot hubs add HUB
+  Add a signalhub to the configuration.
+
+swarmbot hubs remove HUB
+  Remove a signalhub from the configuration.
+
+swarmbot plugins
+  Print the list of installed plugins.
+
+swarmbot plugins add PLUGIN
+  Add an already-installed plugin to the config.
+
+swarmbot plugins remove PLUGIN
+  Remove an installed plugin from the config.
+
+swarmbot plugins install PLUGIN
+  Install a plugin from npm then add it to the config.
 
 ```
 
