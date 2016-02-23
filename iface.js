@@ -82,4 +82,8 @@ Iface.prototype.mirroring = function (cb) {
   this.swarmbot.mirroring(cb)
 }
 
+Iface.prototype.emitEvent = function () {
+  this.swarmbot.emit.apply(this.swarmbot, arguments)
+}
+
 function noop () {}

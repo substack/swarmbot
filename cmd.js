@@ -15,6 +15,9 @@ if (cmd === 'server') {
   RPC(xtend(argv, { fg: true }))
 } else if (cmd === 'help' || argv.help) {
   return usage()
+} else if (cmd === 'emit') {
+  var args = argv._.slice(1)
+  RPC(argv).emitEvent.apply(null, args)
 } else if (cmd === 'id') {
   RPC(argv).id(function (err, id) {
     if (id) console.log(id)
