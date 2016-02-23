@@ -43,7 +43,8 @@ module.exports = function (opts) {
         config.hubs.forEach(function (hub) {
           args.push('--hub', hub)
         })
-      } else if (config && config.plugins) {
+      }
+      if (config && config.plugins) {
         config.plugins.forEach(function (plugin) {
           args.push('--plugin', plugin)
         })
