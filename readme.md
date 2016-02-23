@@ -46,8 +46,16 @@ swarmlog daemon on the local system. If the daemon isn't running, the rpc
 endpoint will automatically spawn it.
 
 ``` js
-var rpc = require('swarmbot/rpc')
+var RPC = require('swarmbot/rpc')
 ```
+
+## var rpc = RPC(opts)
+
+Create new `rpc` handle from:
+
+* `opts.dir` - directory to use for pid/sock/db files. default: `~/.config/swarmbot`
+* `opts.hubs` - array of [signalhub][2] URL strings
+* `opts.plugins` - array of module paths to use as plugins
 
 ## rpc.id(cb)
 
