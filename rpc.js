@@ -26,10 +26,10 @@ module.exports = function (opts) {
 
   var args = [].concat(opts.args).filter(Boolean)
   if (opts.dir) args.push('--dir', opts.dir)
-  [].concat(opts.hub, opts.hubs).forEach(function (hub) {
+  ;[].concat(opts.hub, opts.hubs).forEach(function (hub) {
     if (hub) args.push('--hub', hub)
   })
-  [].concat(opts.plugin, opts.plugins).forEach(function (plugin) {
+  ;[].concat(opts.plugin, opts.plugins).forEach(function (plugin) {
     if (plugin) args.push('--plugin', plugin)
   })
 

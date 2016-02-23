@@ -30,10 +30,14 @@ function Swarmbot (opts) {
   )
   self.logdb = opts.logdb
   if (!self.logdb && opts.db) self.logdb = sub(opts.db, LOGDB)
-  self.idb = opts.idb
-  if (!self.idb && opts.db) self.idb = sub(opts.db, IDB)
+  if (opts.idb) self.idb = sub(opts.idb, IDB)
+  else if (!self.idb && opts.db) self.idb = sub(opts.db, IDB)
+
   self._plugindb = opts.plugindb
   if (!self._plugindb && opts.db) self._plugindb = sub(opts.db, PLUGINDB)
+  else if (!self._plugindb && opts.idb) {
+    self._plugindb = sub(opts.idb, PLUGINDB)
+  }
 
   self._swopts = {
     wrtc: opts.wrtc,

@@ -38,7 +38,7 @@ function Iface (server, stream, args) {
     if (typeof fn !== 'function') {
       self.emit('error', new Error('expected function export'
         + ' from ' + name + ' plugin, received: ' + typeof fn))
-    } else fn(self)
+    } else fn(self.swarmbot, argv)
   })
 }
 
