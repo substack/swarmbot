@@ -2,6 +2,7 @@
 var fs = require('fs')
 var path = require('path')
 var xtend = require('xtend')
+var spawn = require('child_process').spawn
 
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2), {
@@ -81,6 +82,53 @@ if (cmd === 'server') {
       console.log(hub)
     })
     process.exit(0)
+  })
+} else if (cmd === 'plugins' && argv._[1] === 'install'
+&& argv._.length === 3) {
+  var rpc = RPC(argv)
+  rpc.configFile(function (err, file) {
+    if (err) return error(err)
+    var ps = spawn('npm', ['install',argv._[2]], {
+      stdio: 'inherit',
+      cwd: path.dirname(file)
+    })
+    ps.on('exit', function (code) {
+      if (code !== 0) return process.exit(code)
+      rpc.readConfig(function (err, config) {
+        if (err) return error(err)
+        if (!config) config = {}
+        if (!config.plugins) config.plugins = []
+        config.plugins.push(argv._[2])
+        rpc.writeConfig(config, function (err) {
+          if (err) return error(err)
+          else process.exit(0)
+        })
+      })
+    })
+  })
+} else if (cmd === 'plugins' && /^(ls|list|)$/.test(argv._[1] || '')) {
+  RPC(argv).readConfig(function (err, config) {
+    if (err) return error(err)
+    var plugins = (config || {}).plugins || []
+    plugins.forEach(function (plugin) {
+      console.log(plugin)
+    })
+    process.exit(0)
+  })
+} else if (cmd === 'plugins' && /^(rm|remove|del)$/.test(argv._[1])
+&& argv._.length === 3) {
+  var rpc = RPC(argv)
+  rpc.readConfig(function (err, config) {
+    if (err) return error(err)
+    if (!config) config = {}
+    if (!config.plugins) config.plugins = []
+    config.plugins = config.plugins.filter(function (plugin) {
+      return plugin !== argv._[2]
+    })
+    rpc.writeConfig(config, function (err) {
+      if (err) error(err)
+      else process.exit(0)
+    })
   })
 } else if (cmd === 'config' && argv._[1] === 'file') {
   RPC(argv).configFile(function (err, file) {

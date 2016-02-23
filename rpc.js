@@ -51,7 +51,7 @@ module.exports = function (opts) {
       done()
     })
   })
-  mkdirp(opts.dir, done)
+  mkdirp(path.join(opts.dir, 'node_modules'), done)
 
   var methods = new EventEmitter
   var queue = []
