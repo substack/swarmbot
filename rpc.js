@@ -58,6 +58,7 @@ module.exports = function (opts) {
   var queue = []
   var methodNames = Object.keys(Iface.prototype)
     .filter(function (key) { return !/^_/.test(key) })
+    .map(function (key) { return /Stream$/.test(key) ? key + ':s' : key })
   methodNames.forEach(function (name) {
     methods[name] = function () {
       queue.push({ name: name, args: arguments })

@@ -3,6 +3,7 @@ var minimist = require('minimist')
 var fs = require('fs')
 var path = require('path')
 var inherits = require('inherits')
+var once = require('once')
 var level = require('level')
 var sodium = require('chloride')
 var swarmbot = require('./')
@@ -84,6 +85,16 @@ Iface.prototype.mirroring = function (cb) {
 
 Iface.prototype.emitEvent = function () {
   this.swarmbot.emit.apply(this.swarmbot, arguments)
+}
+
+Iface.prototype.replicateStream = function (id, cb) {
+  cb = once(cb || noop)
+  var log = this.swarmbot.logs[id]
+  if (!log) return cb(new Error('no log by that id'))
+  var stream = log.replicate()
+  stream.on('error', cb)
+  stream.on('end', function () { cb(null) })
+  return stream
 }
 
 function noop () {}

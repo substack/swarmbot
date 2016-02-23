@@ -134,6 +134,12 @@ Get the process id as `cb(err, pid)`.
 
 Emit an event `name` with `args...` on the swarmbot instance.
 
+## rpc.replicateStream(id, cb)
+
+Open a replication stream with the log at `id`.
+
+`cb(err)` fires when there is an error or the replication finishes successfully.
+
 # api example
 
 Using the API directly
