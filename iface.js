@@ -42,6 +42,10 @@ function Iface (server, stream, args) {
   })
 }
 
+Iface.prototype.pid = function (cb) {
+  cb(null, process.pid)
+}
+
 Iface.prototype.id = function (cb) {
   cb(null, this.keys.public)
 }

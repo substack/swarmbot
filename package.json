@@ -20,7 +20,7 @@
   "author": "substack",
   "license": "BSD",
   "dependencies": {
-    "auto-daemon": "^2.3.0",
+    "auto-daemon": "^2.4.0",
     "chloride": "^2.0.1",
     "defined": "^1.0.0",
     "duplexify": "^3.4.2",

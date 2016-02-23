@@ -38,6 +38,12 @@ if (cmd === 'server') {
     })
     process.exit(0)
   })
+} else if (cmd === 'pid') {
+  RPC(argv).pid(function (err, pid) {
+    if (err) return error(err)
+    console.log(pid)
+    process.exit(0)
+  })
 } else {
   usage(function () { process.exit(1) })
 }
