@@ -180,7 +180,7 @@ Swarmbot.prototype.open = function (id, opts) {
     if (self.policy.remirror) {
       self._mirrorIndexReady(onready)
     }
-    self.emit('open', id)
+    self.emit('open', id, log)
     return log
   }
   return self.logs[id]
@@ -211,7 +211,7 @@ Swarmbot.prototype._createLog = function (id, opts) {
 
 Swarmbot.prototype.close = function (id) {
   if (has(this.logs, id)) {
-    this.emit('close', id)
+    this.emit('close', id, this.logs[id])
     this.logs[id].swarm.peers.forEach(function (peer) {
       if (peer.close) peer.close()
     })

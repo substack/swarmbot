@@ -8,7 +8,7 @@ var argv = minimist(process.argv.slice(2), {
   alias: { h: 'help' }
 })
 
-var RPC = require('./rpc')
+var RPC = require('./rpc.js')
 var cmd = argv._[0]
 if (cmd === 'server') {
   RPC(xtend(argv, { fg: true }))

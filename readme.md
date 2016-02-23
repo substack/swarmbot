@@ -223,6 +223,14 @@ Close the connection for `id`.
 
 Close all open connections.
 
+## bot.on('open', function (id, log) {})
+
+When a swarmlog is opened, this event fires with the `id` and `log`.
+
+## bot.on('close', function (id, log) {})
+
+When a swarmlog is closed, this event fires with the `id` and `log`.
+
 # install
 
 To get the library:
