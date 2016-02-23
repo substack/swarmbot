@@ -37,6 +37,11 @@ swarmbot mirroring
 swarmbot server
   Listen in the foreground.
 
+Options for all commands:
+
+  --hub=HUB        Use a signalhub at HUB.
+  --plugin=PLUGIN  Use a PLUGIN.
+
 ```
 
 # rpc usage
