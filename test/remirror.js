@@ -1,6 +1,5 @@
 var swarmbot = require('../')
 var memdb = require('memdb')
-var wrtc = require('wrtc')
 var test = require('tape')
 var signalhub = require('signalhub/server')
 var chloride = require('chloride')
@@ -14,7 +13,6 @@ test('remirror', function (t) {
     var keys0 = ssbkeys.generate()
     var bot0 = swarmbot({
       db: memdb(),
-      wrtc: wrtc,
       hubs: hubs,
       sodium: chloride,
       keys: keys0,
@@ -26,7 +24,6 @@ test('remirror', function (t) {
     var keys1 = ssbkeys.generate()
     var bot1 = swarmbot({
       db: memdb(),
-      wrtc: wrtc,
       hubs: hubs,
       sodium: chloride,
       keys: keys1
@@ -34,7 +31,6 @@ test('remirror', function (t) {
     var keys2 = ssbkeys.generate()
     var bot2 = swarmbot({
       db: memdb(),
-      wrtc: wrtc,
       hubs: hubs,
       sodium: chloride,
       keys: keys2
