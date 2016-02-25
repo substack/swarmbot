@@ -28,6 +28,7 @@
     "has": "^1.0.1",
     "homedir": "^0.6.0",
     "hyperlog-index": "^5.0.0",
+    "inherits": "^2.0.1",
     "level": "^1.4.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
