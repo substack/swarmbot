@@ -13,6 +13,11 @@ var resolve = require('resolve')
 var iface = null
 module.exports = function (server, stream, args) {
   if (!iface) iface = new Iface(server, stream, args)
+  Object.keys(Iface.prototype).forEach(function (key) {
+    if (typeof iface[key] === 'function') {
+      iface[key] = iface[key].bind(iface)
+    }
+  })
   return iface
 }
 module.exports.prototype = Iface.prototype
