@@ -8,6 +8,7 @@ var level = require('level')
 var sodium = require('chloride')
 var swarmbot = require('./')
 var RPC = require('./rpc.js')
+var resolve = require('resolve')
 
 var iface = null
 module.exports = function (server, stream, args) {
@@ -36,7 +37,10 @@ function Iface (server, stream, args) {
 
   var plugins = [].concat(argv.plugin, argv.plugins).filter(Boolean)
   plugins.forEach(function (name) {
-    try { var fn = require(name, argv) }
+    try {
+      var file = resolve.sync(name, { basedir: argv.dir })
+      var fn = require(file)
+    }
     catch (err) { return self.emit('error', err) }
     if (typeof fn !== 'function') {
       self.emit('error', new Error('expected function export'

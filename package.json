@@ -31,6 +31,7 @@
     "mkdirp": "^0.5.1",
     "once": "^1.3.3",
     "pump": "^1.0.1",
+    "resolve": "^1.1.7",
     "ssb-keys": "^4.0.10",
     "subleveldown": "^2.1.0",
     "swarmlog": "^1.4.0",
