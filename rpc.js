@@ -58,7 +58,6 @@ module.exports = function (opts) {
   var queue = []
   var methodNames = Object.keys(Iface.prototype)
     .filter(function (key) { return !/^_/.test(key) })
-    .map(function (key) { return /Stream$/.test(key) ? key + ':s' : key })
   methodNames.forEach(function (name) {
     methods[name] = function () {
       queue.push({ name: name, args: arguments })
@@ -76,7 +75,9 @@ module.exports = function (opts) {
       rpcfile: rpcfile,
       sockfile: path.join(opts.dir, 'sock'),
       pidfile: path.join(opts.dir, 'pid'),
-      methods: methodNames,
+      methods: methodNames.map(function (key) {
+        return /Stream$/.test(key) ? key + ':s' : key
+      }),
       debug: true,
       autoclose: true,
       exit: true,
