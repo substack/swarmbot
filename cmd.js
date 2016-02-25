@@ -91,6 +91,7 @@ if (cmd === 'server') {
   var rpc = RPC(argv)
   rpc.configFile(function (err, file) {
     if (err) return error(err)
+    var name = path.basename(argv._[2].split('@')[0])
     var ps = spawn('npm', ['install',argv._[2]], {
       stdio: 'inherit',
       cwd: path.dirname(file)
@@ -101,7 +102,7 @@ if (cmd === 'server') {
         if (err) return error(err)
         if (!config) config = {}
         if (!config.plugins) config.plugins = []
-        config.plugins.push(argv._[2])
+        config.plugins.push(name)
         rpc.writeConfig(config, function (err) {
           if (err) return error(err)
           else process.exit(0)
