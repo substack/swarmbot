@@ -123,6 +123,18 @@ if (cmd === 'server') {
     })
     process.exit(0)
   })
+} else if (cmd === 'plugins' && argv._[1] === 'add' && argv._.length === 3) {
+  var rpc = RPC(argv)
+  rpc.readConfig(function (err, config) {
+    if (err) return error(err)
+    if (!config) config = {}
+    if (!config.plugins) config.plugins = []
+    config.plugins.push(argv._[2])
+    rpc.writeConfig(config, function (err) {
+      if (err) error(err)
+      else process.exit(0)
+    })
+  })
 } else if (cmd === 'plugins' && /^(rm|remove|del)$/.test(argv._[1])
 && argv._.length === 3) {
   var rpc = RPC(argv)
