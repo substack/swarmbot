@@ -63,6 +63,7 @@ Iface.prototype.configFile = function (cb) {
 
 Iface.prototype.readConfig = function (cb) {
   fs.readFile(this.configfile, 'utf8', function (err, src) {
+    if (err && err.code === 'ENOENT') return cb(null, {})
     if (err) return cb(err)
     try { var config = JSON.parse(src) }
     catch (err) { return cb(err) }
