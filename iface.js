@@ -29,16 +29,19 @@ function Iface (server, stream, args) {
   EventEmitter.call(self)
   var argv = minimist(args)
   self.keys = require(path.join(argv.dir, 'keys.json'))
-  self.swarmbot = swarmbot({
-    logdb: level(path.join(argv.dir, 'log.db')),
-    idb: level(path.join(argv.dir, 'index.db')),
-    hubs: [].concat(argv.hub, argv.hubs).filter(Boolean),
-    keys: self.keys,
-    sodium: sodium
-  })
+  var hubs = [].concat(argv.hub, argv.hubs).filter(Boolean)
+  if (hubs.length) {
+    self.swarmbot = swarmbot({
+      logdb: level(path.join(argv.dir, 'log.db')),
+      idb: level(path.join(argv.dir, 'index.db')),
+      hubs: hubs,
+      keys: self.keys,
+      sodium: sodium
+    })
+    self.swarmbot.on('open', function () { self.emit('ref') })
+    self.swarmbot.on('close', function () { self.emit('unref') })
+  }
   self.configfile = argv.configfile
-  self.swarmbot.on('open', function () { self.emit('ref') })
-  self.swarmbot.on('close', function () { self.emit('unref') })
 
   var plugins = [].concat(argv.plugin, argv.plugins).filter(Boolean)
   plugins.forEach(function (name) {
@@ -50,7 +53,7 @@ function Iface (server, stream, args) {
     if (typeof fn !== 'function') {
       self.emit('error', new Error('expected function export'
         + ' from ' + name + ' plugin, received: ' + typeof fn))
-    } else fn(self.swarmbot, argv)
+    } else if (self.swarmbot) fn(self.swarmbot, argv)
   })
 }
 
@@ -81,23 +84,28 @@ Iface.prototype.id = function (cb) {
 }
 
 Iface.prototype.mirror = function (id, cb) {
-  this.swarmbot.mirror(id, cb)
+  if (!this.swarmbot) cb(new Error('no hubs configured'))
+  else this.swarmbot.mirror(id, cb)
 }
 
 Iface.prototype.unmirror = function (id, cb) {
-  this.swarmbot.unmirror(id, cb)
+  if (!this.swarmbot) cb(new Error('no hubs configured'))
+  else this.swarmbot.unmirror(id, cb)
 }
 
 Iface.prototype.mirroring = function (cb) {
-  this.swarmbot.mirroring(cb)
+  if (!this.swarmbot) cb(new Error('no hubs configured'))
+  else this.swarmbot.mirroring(cb)
 }
 
 Iface.prototype.emitEvent = function () {
-  this.swarmbot.emit.apply(this.swarmbot, arguments)
+  if (!this.swarmbot) cb(new Error('no hubs configured'))
+  else this.swarmbot.emit.apply(this.swarmbot, arguments)
 }
 
 Iface.prototype.replicateStream = function (id, cb) {
   cb = once(cb || noop)
+  if (!this.swarmbot) return cb(new Error('no hubs configured'))
   var log = this.swarmbot.logs[id]
   if (!log) return cb(new Error('no log by that id'))
   var stream = log.replicate()
