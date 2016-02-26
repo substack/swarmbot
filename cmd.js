@@ -6,8 +6,12 @@ var spawn = require('child_process').spawn
 
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2), {
-  alias: { h: 'help' }
+  alias: { h: 'help' },
+  boolean: [ 'version' ]
 })
+if (argv.version) {
+  return console.log(require('./package.json').version)
+}
 
 var RPC = require('./rpc.js')
 var cmd = argv._[0]
