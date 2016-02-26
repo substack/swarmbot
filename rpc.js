@@ -25,34 +25,35 @@ module.exports = function (opts) {
     if (plugin) args.push('--plugin', plugin)
   })
 
-  var pending = 3
-  fs.stat(path.join(opts.dir, 'keys.json'), function (err, stat) {
-    if (stat) return done()
-    fs.writeFile(path.join(opts.dir, 'keys.json'),
-      JSON.stringify(ssbkeys.generate()), done)
-  })
-  var configfile = path.join(opts.dir, 'config.json')
-  args.push('--configfile', configfile)
-  fs.stat(configfile, function (err, stat) {
-    if (!stat) return done()
-    fs.readFile(configfile, 'utf8', function (err, src) {
-      if (err) return done()
-      try { var config = JSON.parse(src) }
-      catch (err) { return done() }
-      if (config && config.hubs) {
-        config.hubs.forEach(function (hub) {
-          args.push('--hub', hub)
-        })
-      }
-      if (config && config.plugins) {
-        config.plugins.forEach(function (plugin) {
-          args.push('--plugin', plugin)
-        })
-      }
-      done()
+  var pending = 2
+  mkdirp(path.join(opts.dir, 'node_modules'), function (err) {
+    fs.stat(path.join(opts.dir, 'keys.json'), function (err, stat) {
+      if (stat) return done()
+      fs.writeFile(path.join(opts.dir, 'keys.json'),
+        JSON.stringify(ssbkeys.generate()), done)
+    })
+    var configfile = path.join(opts.dir, 'config.json')
+    args.push('--configfile', configfile)
+    fs.stat(configfile, function (err, stat) {
+      if (!stat) return done()
+      fs.readFile(configfile, 'utf8', function (err, src) {
+        if (err) return done()
+        try { var config = JSON.parse(src) }
+        catch (err) { return done() }
+        if (config && config.hubs) {
+          config.hubs.forEach(function (hub) {
+            args.push('--hub', hub)
+          })
+        }
+        if (config && config.plugins) {
+          config.plugins.forEach(function (plugin) {
+            args.push('--plugin', plugin)
+          })
+        }
+        done()
+      })
     })
   })
-  mkdirp(path.join(opts.dir, 'node_modules'), done)
 
   var methods = new EventEmitter
   var queue = []
