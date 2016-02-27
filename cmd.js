@@ -16,6 +16,23 @@ if (argv.version) {
 var RPC = require('./rpc.js')
 var cmd = argv._[0]
 if (cmd === 'server') {
+  var resolve = require('resolve')
+  var electronSpawnPath = require.resolve('electron-spawn/cli.js')
+  var electronPath = resolve.sync('.bin/electron')
+  var binPath = path.dirname(electronPath)
+
+  RPC(argv).pid(function (err, pid) {
+    if (err) return error(err)
+    process.kill(pid)
+    spawn(electronPath, [__filename, '_server'], {
+      stdio: 'inherit',
+      cwd: process.cwd(),
+      env: xtend(process.env, {
+        PATH: binPath + ':' + process.env.PATH
+      })
+    })
+  })
+} else if (cmd === '_server') {
   RPC(xtend(argv, { fg: true }))
 } else if (cmd === 'help' || argv.help) {
   return usage()
