@@ -160,7 +160,8 @@ Swarmbot.prototype.mirror = function (id, opts, cb) {
   }
 }
 
-Swarmbot.prototype.unmirror = function (ids, cb) {
+Swarmbot.prototype.unmirror = function (id, opts, cb) {
+  var self = this
   if (typeof opts === 'function') {
     cb = opts
     opts = {}
@@ -168,8 +169,16 @@ Swarmbot.prototype.unmirror = function (ids, cb) {
   if (!cb) cb = noop
   if (!opts) opts = {}
   var doc = { type: 'bot.unmirror', id: id }
-  if (opts.links) this.log.add(opts.links, doc, opts, onadd)
-  else this.log.append(doc, opts, onadd)
+  if (opts.links) self.log.add(opts.links, doc, opts, onadd)
+  else self.log.append(doc, opts, onadd)
+
+  function onadd (err, node) {
+    if (err) cb(err)
+    else {
+      self.close(id)
+      cb(null, node)
+    }
+  }
 }
 
 Swarmbot.prototype.open = function (id, opts) {
