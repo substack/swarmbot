@@ -14,6 +14,8 @@ This tool consists of 4 parts:
 
 Heavily inspired by [scuttlebot][6].
 
+Make sure to use node 5 when installing swarmbot from npm.
+
 # command-line usage
 
 On a system with high uptime, it's useful to set up a swarmbot to mirror other
@@ -325,6 +327,10 @@ module.exports = function (bot, opts) {
 ```
 
 # install
+
+This library currently works only with node 5.
+
+Make sure to run node 5 when running npm install.
 
 To get the library:
 
