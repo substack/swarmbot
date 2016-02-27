@@ -9,6 +9,7 @@ var homedir = require('homedir')
 var EventEmitter = require('events').EventEmitter
 var Iface = require('./iface.js')
 var rpcfile = require.resolve('./iface.js')
+var treekill = require('tree-kill')
 
 var resolve = require('resolve')
 var electronSpawnPath = require.resolve('electron-spawn/cli.js')
@@ -96,12 +97,13 @@ module.exports = function (opts) {
       var server = listen(Iface, xtend(aopts, { autoclose: false }))
       server.once('ready', function () {
         autod(aopts, function (err, r, c) { c.end() })
+          .on('process', onproc)
       })
     } else {
       autod(aopts, function (err, r, c) {
         if (err) methods.emit('error', err)
         else bindMethods(r)
-      })
+      }).on('process', onproc)
     }
   }
 
@@ -111,6 +113,15 @@ module.exports = function (opts) {
     })
     queue.splice(0).forEach(function (q) {
       methods[q.name].apply(methods, q.args)
+    })
+  }
+  function onproc (ps) {
+    process.once('SIGINT', onkill)
+    process.once('SIGTERM', onkill)
+    function onkill () { treekill(ps.pid) }
+    ps.once('exit', function (code) {
+      treekill(ps.pid)
+      process.exit(code)
     })
   }
 }
