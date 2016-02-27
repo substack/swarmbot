@@ -17,10 +17,11 @@
   "author": "substack",
   "license": "BSD",
   "dependencies": {
-    "auto-daemon": "^2.4.0",
+    "auto-daemon": "^2.5.0",
     "chloride": "^2.0.1",
     "defined": "^1.0.0",
     "duplexify": "^3.4.2",
+    "electron-prebuilt": "^0.36.9",
     "electron-spawn": "^4.1.0",
     "has": "^1.0.1",
     "homedir": "^0.6.0",
