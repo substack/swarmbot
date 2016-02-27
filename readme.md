@@ -59,6 +59,9 @@ swarmbot pid
 swarmbot stop
   Kill the daemon process.
 
+swarmbot restart
+  Stop the background process and start a new process in its place.
+
 swarmbot hubs
   Print the list of signalhubs.
 

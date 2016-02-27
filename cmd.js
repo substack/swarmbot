@@ -58,6 +58,14 @@ if (cmd === 'server') {
     process.kill(pid)
     process.exit(0)
   })
+} else if (cmd === 'restart') {
+  RPC(argv).pid(function (err, pid) {
+    if (err) return error(err)
+    process.kill(pid)
+    RPC(argv).id(function (err, id) {
+      process.exit(0)
+    })
+  })
 } else if (cmd === 'hubs' && argv._[1] === 'add' && argv._[2]) {
   var rpc = RPC(argv)
   rpc.readConfig(function (err, config) {
