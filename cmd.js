@@ -24,7 +24,7 @@ if (cmd === 'server') {
   RPC(argv).pid(function (err, pid) {
     if (err) return error(err)
     process.kill(pid)
-    spawn(electronPath, [__filename, '_server'], {
+    spawn(electronSpawnPath, [__filename, '_server'], {
       stdio: 'inherit',
       cwd: process.cwd(),
       env: xtend(process.env, {
