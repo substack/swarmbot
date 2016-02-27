@@ -20,7 +20,6 @@ module.exports = function (server, stream, args) {
   })
   return iface
 }
-module.exports.prototype = Iface.prototype
 inherits(Iface, EventEmitter)
 
 function Iface (server, stream, args) {
@@ -116,3 +115,4 @@ Iface.prototype.replicateStream = function (id, cb) {
 }
 
 function noop () {}
+module.exports.prototype = Iface.prototype
