@@ -118,7 +118,11 @@ module.exports = function (opts) {
   function onproc (ps) {
     process.once('SIGINT', onkill)
     process.once('SIGTERM', onkill)
-    function onkill () { treekill(ps.pid) }
+    function onkill () {
+      treekill(ps.pid, 'SIGTERM', function () {
+        process.exit(0)
+      })
+    }
     ps.once('exit', function (code) {
       treekill(ps.pid)
       process.exit(code)

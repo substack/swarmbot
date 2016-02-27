@@ -3,6 +3,7 @@ var fs = require('fs')
 var path = require('path')
 var xtend = require('xtend')
 var spawn = require('child_process').spawn
+var treekill = require('tree-kill')
 
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2), {
@@ -84,8 +85,10 @@ if (cmd === 'server') {
 } else if (cmd === 'kill' || cmd === 'stop') {
   RPC(argv).pid(function (err, pid) {
     if (err) return error(err)
-    process.kill(pid)
-    process.exit(0)
+    treekill(pid, 'SIGKILL', function () {
+      process.kill(pid)
+      process.exit(0)
+    })
   })
 } else if (cmd === 'restart') {
   RPC(argv).pid(function (err, pid) {
