@@ -106,7 +106,7 @@ Iface.prototype.emitEvent = function () {
 Iface.prototype.replicateStream = function (id, cb) {
   cb = once(cb || noop)
   if (!this.swarmbot) return cb(new Error('no hubs configured'))
-  var log = this.swarmbot.logs[id]
+  var log = this.swarmbot.open(id)
   if (!log) return cb(new Error('no log by that id'))
   var stream = log.replicate()
   stream.on('error', cb)
