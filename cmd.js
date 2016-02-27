@@ -7,7 +7,7 @@ var spawn = require('child_process').spawn
 var minimist = require('minimist')
 var argv = minimist(process.argv.slice(2), {
   alias: { h: 'help' },
-  boolean: [ 'version' ]
+  boolean: [ 'version', 'all' ]
 })
 if (argv.version) {
   return console.log(require('./package.json').version)
@@ -50,6 +50,18 @@ if (cmd === 'server') {
     if (err) error(err)
     else process.exit(0)
   })
+} else if (cmd === 'unmirror' && argv.all) {
+  var rpc = RPC(argv)
+  rpc.mirroring(function (err, ids) {
+    var pending = 1 + (ids || []).length
+    ;(ids || []).forEach(function (id) {
+      rpc.unmirror(id.id, function (err) {
+        if (err) error(err)
+        else if (--pending === 0) process.exit(0)
+      })
+    })
+    if (--pending === 0) process.exit(0)
+  })
 } else if (cmd === 'unmirror') {
   RPC(argv).unmirror(argv._[1], function (err) {
     if (err) error(err)
@@ -59,7 +71,7 @@ if (cmd === 'server') {
   RPC(argv).mirroring(function (err, ids) {
     if (err) return error(err)
     ids.forEach(function (id) {
-      console.log(id.key)
+      console.log(id.id)
     })
     process.exit(0)
   })
